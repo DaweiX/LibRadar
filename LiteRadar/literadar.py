@@ -147,11 +147,14 @@ class LibRadarLite(object):
             op_code = int(dex_method.dexCode.insns[int(offset):int(offset + 2)], 16)
             decoded_instruction = dex_parser.dexDecodeInstruction(dex_obj, dex_method.dexCode, offset)
             smali_code = decoded_instruction.smaliCode
+            add = decoded_instruction.length
+            if add == 0:
+                break
+            offset += add
             if smali_code is None:
-                logger.warning("smali code is None.")
+                logger.debug("smali code is None.")
                 continue
             # Next Instruction.
-            offset += decoded_instruction.length
             if smali_code == 'nop':
                 break
             # 4 invokes from 0x6e to 0x72
